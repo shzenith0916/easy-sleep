@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import librosa
 import noisereduce as nr
 from pathlib import Path
+import scipy
 from scipy.ndimage import median_filter
 
 
@@ -45,9 +46,13 @@ def median_filter_on_spectrogram(mel_spec_db, size=(1, 3)):
 
 if __name__ == "__main__":
 
-    input_dir = ''
-    output_dir = ''
+    input_dir = '/mnt/d/Snoring/easy_sleep/raw/no_snoring'
+    output_dir = '/mnt/d/Snoring/easy_sleep/snoring_data_process/0'
+
+    # Ensure the output directory exists
     os.makedirs(output_dir, exist_ok=True)
+    print("input dir {}".format(input_dir))
+    print("output dir {}".format(output_dir))
 
     # Mel-spectrogram 생성 변수
     n_fft = 2048  # Fourier Transform window size
@@ -71,14 +76,18 @@ if __name__ == "__main__":
 
             # Mel-spectrogram 시각화 및 이미지 저장
             plt.figure(figsize=(10, 4))
-            librosa.display.specshow(db_scaled_mel, sr=sample_rate, hop_length=hop_length,
-                                     x_axis='time', y_axis='mel')
+            librosa.display.specshow(db_scaled_mel, 
+                                     sr=sample_rate, 
+                                     hop_length=hop_length,
+                                     x_axis='time', 
+                                     y_axis='mel')
             plt.colorbar(format='%+2.0f dB')
             plt.title("{} Mel-spectrogram".format(file_name))
             plt.tight_layout()
-            plt.savefig('{}.png'.format(file_name))
+            output_path = os.path.join(output_dir, '{}.png'.format(file_name))
+            plt.savefig(output_path)
             plt.close()
             print(f"Spectrogram Image Created for {file_name}")
 
         except Exception as e:
-            print(f"Error Occured {file_path}: {e}")
+            print(f"Error Occurred for {file_path}: {e}")
