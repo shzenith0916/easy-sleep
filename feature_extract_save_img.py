@@ -48,7 +48,7 @@ if __name__ == "__main__":
     audio, sample_rate = load_audio_and_resample(file_path, 16000)
     dc_offset_removed = remove_dc_offset(audio)
     rms_normalized_data = rms_normalize_audio(dc_offset_removed)
-    denoised_data = reduce_noise(rms_normalized_data, sample_rate)\
+    denoised_data = reduce_noise(rms_normalized_data, sample_rate)
 
     # Mel-spectrogram 생성 변수
     n_fft = 2048  # Fourier Transform window size
@@ -63,8 +63,7 @@ if __name__ == "__main__":
 
     # Mel-spectrogram 시각화 및 이미지 저장
     plt.figure(figsize=(10, 4))
-    librosa.display.specshow(db_scaled_mel, sr=sample_rate, hop_length=hop_length,
-                             x_axis='time', y_axis='mel', cmap='viridis')
+    librosa.display.specshow(db_scaled_mel, sr=sample_rate, hop_length=hop_length, x_axis='time', y_axis='mel')
     plt.colorbar(format='%+2.0f dB')
     plt.title("{} Mel-spectrogram".format(file_name))
     plt.tight_layout()
