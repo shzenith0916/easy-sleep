@@ -1,0 +1,113 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Machine Learning specific
+# Models
+*.h5
+*.pkl
+*.pickle
+*.model
+*.pt
+*.pth
+*.onnx
+*.pb
+*.tflite
+*.joblib
+
+# Data files (uncomment if you want to exclude data files)
+# *.wav
+# *.mp3
+# *.mp4
+# *.avi
+# *.mov
+# *.jpg
+# *.jpeg
+# *.png
+# *.bmp
+# *.tiff
+# *.gif
+# *.svg
+# *.csv
+# *.tsv
+# *.json
+# *.xml
+# *.parquet
+# *.xlsx
+# *.xls
+
+# 원본 오디오인 output 파일에서서 코골이 구간을 찾아 segment 하는 그 결과까지를 샘플로 보여주기 위해 제외 
+# Output files
+output*
+*output*
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Tensorboard logs
+logs/
+runs/
+
+# MLflow
+mlruns/
+
+# Weights & Biases
+wandb/
+
+# DVC
+.dvc/
+.dvcignore
+
