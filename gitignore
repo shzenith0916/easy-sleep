@@ -77,7 +77,7 @@ output*
 *output*
 
 # Logs and temporary files
-*.log
+# *.log
 *.tmp
 *.temp
 
