@@ -5,39 +5,6 @@ import os
 import target_spectrogram_freq
 
 
-def threshold_for_snoring(target_band_db, increment=10):
-    """Calculate a threshold value based on the mean dB plus an increment.
-
-    Parameters:
-    - target_band_db (numpy.ndarray): Array of mean decibel levels across a specific frequency band.
-    - increment (float): Decibel value to add to the mean dB to set the snoring threshold.
-
-    Returns:
-    - float: Calculated threshold in decibels.
-    """
-
-    threshold_db = np.mean(target_band_db) + increment  # 평균보다 10dB 높게 설정
-
-    return threshold_db
-
-
-def find_snoring_events(target_band_db, threshold_db):
-    """Identify time indices where the dB level exceeds the threshold.
-
-    Parameters:
-    - target_band_db (numpy.ndarray): Array of decibel levels across a specific frequency band.
-    - threshold_db (float): Threshold decibel level to identify significant snoring events.
-
-    Returns:
-    - numpy.ndarray: Array of times at which snoring events occur.
-    """
-
-    snoring_events = target_band_db > threshold_db
-    times = librosa.frames_to_time(range(len(snoring_events)), sr=sr)
-
-    return times[snoring_events]
-
-
 def plot_snoring_events(audio, sr, snoring_events):
     """Plot the audio waveform and overlay snoring events.
 

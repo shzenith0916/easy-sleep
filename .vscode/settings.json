@@ -1,0 +1,5 @@
+{
+    "python.sortImports.args": ["--force-to-top=sys"],
+    "python.formatting.provider": "none",
+    "editor.formatOnSave": false
+}

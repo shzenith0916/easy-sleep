@@ -1,5 +1,7 @@
 # Byte-compiled / optimized / DLL files
+
 __pycache__/
+**/__pycache__/
 *.py[cod]
 *$py.class
 
@@ -51,10 +53,10 @@ venv.bak/
 *.joblib
 
 # Data files (uncomment if you want to exclude data files)
-# *.wav
-# *.mp3
-# *.mp4
-# *.avi
+*.wav
+*.mp3
+*.mp4
+*.avi
 # *.mov
 # *.jpg
 # *.jpeg
@@ -65,7 +67,7 @@ venv.bak/
 # *.svg
 # *.csv
 # *.tsv
-# *.json
+*.json
 # *.xml
 # *.parquet
 # *.xlsx
