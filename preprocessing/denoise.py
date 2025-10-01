@@ -52,31 +52,6 @@ def denoise_non_stationary(audio, sr, window_mins=5):
 
     return np.concatenate(processed_segments)
 
-def remove_dc_offset(data):
-    mean_value = np.mean(data)
-    return data - mean_value
-
-
-def rms_normalize_audio(data, target_rms=0.1):
-    rms = np.sqrt(np.mean(data**2))
-    # 1e-6을 추가하는 이유는, 0으로 나누는것을 방지하기 위함
-    scaling_factor = target_rms / (rms + 1e-6)
-    return data * scaling_factor
-
-# ===============================================
-
-def dc_rms_stationary(audio, sr, segment_mins=5):
-    audio = remove_dc_offset(audio)
-    audio = rms_normalize_audio(audio, target_rms=0.1)
-    audio = denoise_stationary(audio, sr, segment_mins=segment_mins)
-    return audio
-
-def dc_rms_non_stationary(audio, sr, window_mins=5):
-    audio = remove_dc_offset(audio)
-    audio = rms_normalize_audio(audio, target_rms=0.1)
-    audio = denoise_non_stationary(audio, sr, window_mins=window_mins)
-    return audio
-
 
 def reduce_noise(data, sr):
     noise_sample = data[:sr]  # 처음 1초를 배경 소음으로 사용
@@ -96,33 +71,25 @@ def reduce_noise(data, sr):
 #     return stage1_audio, sr
 
 
-# def process_non_stationary_only(audio_path, window_mins=5):
-#     """2단계: Non-stationary 노이즈 제거만 수행"""
-#     # 오디오 로드
-#     audio, sr = librosa.load(audio_path, sr=16000)
-#     print(f"오디오 길이: {len(audio)/sr/3600:.1f} hours")
-
-#     # 5분 단위로 변화하는 노이즈 제거
-#     print(f"Non-stationary 노이즈 제거 중...")
-#     stage2_audio = denoise_non_stationary(audio, sr, window_mins=5)
-
-#     return stage2_audio, sr
-
-def find_quiet_noise_profile(audio, sr):
+def find_quiet_noise_profile(audio, sr, chunk_duration=5, percentile=10):
     """
     말소리 없는(에너지가 낮은) 조용한 구간을 소음 프로파일로 사용
     """
-    y, sr = librosa.load(audio, sr=sr)
-
     # 5분 청크로 나누어 에너지 계산
-    chunk_duration = 5 * 60  # 5분
     chunk_size = int(chunk_duration * sr)
+    max_duration = min(len(audio), int(60 * 60 * sr)) # 최대 1시간
 
-    chunk_energies = []
-    for i in range(0, min(len(audio), int(60*60*sr)), chunk_size):  # 첫 1시간만 확인
+    chunk_data = []
+    # 슬라이딩 윈도우로 더 많은 샘플 수집 (50% overlap)
+    hop_size = chunk_size // 2
+
+    for i in range(0, max_duration - chunk_size, hop_size):  # 첫 1시간만 확인
         chunk = audio[i:i+chunk_size]
-        energy = np.mean(chunk**2)
-        chunk_energies.append((i, energy))
+        
+        rms_energy = np.sqrt(np.mean(chunk**2))
+       # zero-crossing rate (말소리 판단 기준)
+        zcr = np.mean(librosa.zero_crossings(chunk))
+
 
     # 가장 조용한 청크 찾기
     quietest_start = min(chunk_energies, key=lambda x: x[1])[0]

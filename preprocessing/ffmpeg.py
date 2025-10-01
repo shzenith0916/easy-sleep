@@ -1,6 +1,6 @@
-import subprocess
 import sys
 from pathlib import Path
+import subprocess
 
 
 def convert_avi_to_wav(input_file, output_file=None):

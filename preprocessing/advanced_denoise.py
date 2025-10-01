@@ -20,9 +20,14 @@ class SnoringDenoiser:
     def __init__(self, sr=16000):
         self.sr = sr
         # 코골이 주파수 범위 (Hz)
-        self.snoring_min, self.snoring_max = 40, 1000
+        self.snoring_min, self.snoring_max = 20, 500
+        # 핵심 코골이 검출 대역 (Hz)
+        # self.snoring_core_min, self.snoring_core_max = 30, 300
         # 말소리 제거 범위 (Hz)
         self.speech_min, self.speech_max = 2000, 4000
+        # 기본 남성 여성 말 주파수
+        # self.male_min, self.male_max = 85, 180
+        # self.female_min, self.female_max = 165, 255
 
     def remove_background_noise(self, audio, noise_sample):
         """
@@ -149,7 +154,7 @@ class SnoringDenoiser:
         return energy_reduction
 
 
-# 간단한 사용 함수들
+# 간단 사용 함수
 def clean_snoring_audio(audio_file, sr=16000, noise_duration=20):
     """
     코골이 오디오 노이즈 제거 (간단한 사용법)
@@ -196,23 +201,18 @@ def show_waveform_comparison(original, cleaned, sr=16000, duration_minutes=2):
     fig, axes = plt.subplots(2, 1, figsize=(12, 8))
 
     axes[0].plot(time_axis, orig_seg, alpha=0.7, color='red')
-    axes[0].set_title('원본 오디오')
-    axes[0].set_ylabel('진폭')
+    axes[0].set_title('Original Audio')
+    axes[0].set_ylabel('Amplitude')
     axes[0].grid(True, alpha=0.3)
 
     axes[1].plot(time_axis, clean_seg, alpha=0.7, color='blue')
-    axes[1].set_title('노이즈 제거 후')
-    axes[1].set_xlabel('시간 (분)')
-    axes[1].set_ylabel('진폭')
+    axes[1].set_title('After Noise Reduction')
+    axes[1].set_xlabel('Time (Minutes)')
+    axes[1].set_ylabel('Amplitude')
     axes[1].grid(True, alpha=0.3)
 
     plt.tight_layout()
     plt.show()
 
 
-# 사용법 예시
-if __name__ == "__main__":
-    print("코골이 노이즈 제거기 사용법:")
-    print("1. clean_snoring_audio('audio.wav') - 간단한 노이즈 제거")
-    print("2. show_waveform_comparison(original, cleaned) - 결과 비교")
-    print("3. denoiser = SnoringDenoiser(sr=16000) - 개별 방법 사용")
+# if __name__ == "__main__":
