@@ -5,6 +5,7 @@ import librosa
 import noisereduce as nr
 from pathlib import Path
 from scipy.ndimage import median_filter
+from scipy import signal
 
 
 def denoise_stationary(audio, sr, segment_mins=30):
@@ -31,7 +32,6 @@ def denoise_stationary(audio, sr, segment_mins=30):
 
     return np.concatenate(processed_segments)
 
-
 def denoise_non_stationary(audio, sr, window_mins=5):
     """비정상 노이즈 처리"""
     # size of audio chunk
@@ -53,22 +53,58 @@ def denoise_non_stationary(audio, sr, window_mins=5):
     return np.concatenate(processed_segments)
 
 
-def reduce_noise(data, sr):
+def remove_dc_offset(data):
+    mean_value = np.mean(data)
+    return data - mean_value
+
+def calculate_rms(audio):
+    return np.sqrt(np.mean(audio**2))
+
+def rms_normalize_audio(data, target_rms=0.1):
+    rms = np.sqrt(np.mean(data**2))
+    # 1e-6을 추가하는 이유는, 0으로 나누는것을 방지하기 위함
+    scaling_factor = target_rms / (rms + 1e-6)
+    return data * scaling_factor
+
+
+def median_filter(self, audio, size=(61, 61)):
+    """오디오에 median filter 적용
+    
+    parameters:
+    - audio numpy.ndarray: 오디오 신호 (1D 배열)
+    - size: median filter 크기  
+    """
+
+    filtered_audio = signal.medfilt(audio, size=size)
+    return filtered_audio
+
+def wiener_filter(self, audio):
+    """오디오에 wiener filter 적용
+    
+    parameters:
+    - audio numpy.ndarray: 오디오 신호 (1D 배열)
+    """
+    filtered_audio = signal.wiener(audio)
+    return filtered_audio
+
+def remove_high_frequency(self, audio, cutoff_freq=800):
+    """
+    고주파수 제거 (말소리 및 전자기기 소음 제거거)
+    - cutoff_freq: 차단 주파수 (기본값: 2000Hz -> 800Hz)
+    """
+    nyquist = self.sr / 2
+    normalized_cutoff = cutoff_freq / nyquist
+
+    # 저역통과 필터 적용 / Butterworth low-pass filter 설계
+    b, a = signal.butter(5, Wn=normalized_cutoff, btype='low')
+    filtered_audio = signal.filtfilt(b, a, audio)
+    print(f"말소리 및 고주파 제거 완료: {cutoff_freq}Hz 이상 제거")
+
+    return filtered_audio
+
+def noise_sample_reduction(data, sr):
     noise_sample = data[:sr]  # 처음 1초를 배경 소음으로 사용
     return nr.reduce_noise(y=data, sr=sr, y_noise=noise_sample)
-
-
-# def process_stationary_only(audio_path, segment_mins=5):
-#     """1단계: Stationary 노이즈 제거만 수행"""
-#     # 오디오 로드
-#     audio, sr = librosa.load(audio_path, sr=16000)
-#     print(f"오디오 길이: {len(audio)/sr/3600:.1f} hours")
-
-#     # 30분 단위로 기본 노이즈(변화하지 않는 노이즈) 제거
-#     print(f"Stationary 노이즈 제거 중...")
-#     stage1_audio = denoise_stationary(audio, sr, segment_mins=30)
-
-#     return stage1_audio, sr
 
 
 def find_quiet_noise_profile(audio, sr, chunk_duration=5, percentile=10):
@@ -92,7 +128,7 @@ def find_quiet_noise_profile(audio, sr, chunk_duration=5, percentile=10):
 
 
     # 가장 조용한 청크 찾기
-    quietest_start = min(chunk_energies, key=lambda x: x[1])[0]
+    quietest_start = min(chunk_data, key=lambda x: x[1])[0]
     noise_sample = audio[quietest_start:quietest_start + chunk_size]
 
     print(

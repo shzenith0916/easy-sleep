@@ -4,17 +4,9 @@ import noisereduce as nr
 from scipy import signal
 import matplotlib.pyplot as plt
 
-
-def median_filter(mel_spec_db, size=(1, 3)):
-    """스펙트로그램에 median filter 적용
+class AdvancedDenoiser:
     """
-    filtered_spec = median_filter(mel_spec_db, size=size)
-    return filtered_spec
-
-
-class SnoringDenoiser:
-    """
-    코골이/호흡소리 전용 노이즈 제거기
+    코골이/호흡소리를 위한 전용 노이즈 제거기
     """
 
     def __init__(self, sr=16000):
@@ -51,25 +43,19 @@ class SnoringDenoiser:
         clean_stft = clean_magnitude * np.exp(1j * phase)
         return librosa.istft(clean_stft, hop_length=512)
 
-    def remove_high_frequency(self, audio, cutoff_freq=2000):
-        """
-        고주파수 제거 (말소리, 전자기기 소음)
-        - cutoff_freq: 차단 주파수 (기본값: 2000Hz)
-        """
-        nyquist = self.sr / 2
-        normalized_cutoff = cutoff_freq / nyquist
 
-        # 저역통과 필터 적용
-        b, a = signal.butter(5, normalized_cutoff, btype='low')
-        return signal.filtfilt(b, a, audio)
-
+class SnoringEvents:
+    def __init__(self, data_path, sr=16000):
+        self.sr= sr
+        self.audio = librosa.load(data_path, sr=sr)
+        
     def keep_snoring_frequencies(self, audio):
         """
         코골이 주파수만 보존 (멜 스펙트로그램 기반)
         """
         # 멜 스펙트로그램 계산
         mel_spec = librosa.feature.melspectrogram(
-            y=audio, sr=self.sr, n_mels=128, fmin=0, fmax=self.sr//2
+            y=self.audio, sr=self.sr, n_mels=128, fmin=0, fmax=self.sr//2
         )
 
         # 코골이 주파수 범위만 선택
@@ -216,3 +202,46 @@ def show_waveform_comparison(original, cleaned, sr=16000, duration_minutes=2):
 
 
 # if __name__ == "__main__":
+
+# def compare_noise_reduction_methods(audio_file):
+#     """
+#     다양한 소음 제거 방법 비교
+#     """
+#     # 원본
+#     original, sr = librosa.load(audio_file, sr=22050)
+
+#     # 2단계 방법
+#     cleaned_2stage, _ = two_stage_noise_reduction(audio_file)
+
+#     # 시각화
+#     fig, axes = plt.subplots(3, 1, figsize=(15, 12))
+
+#     # 시간 영역
+#     time_original = np.linspace(0, len(original)/sr, len(original))
+#     time_cleaned = np.linspace(0, len(cleaned_2stage)/sr, len(cleaned_2stage))
+
+#     axes[0].plot(time_original, original)
+#     axes[0].set_title('원본 오디오')
+#     axes[0].set_ylabel('Amplitude')
+
+#     axes[1].plot(time_cleaned, cleaned_2stage)
+#     axes[1].set_title('2단계 소음 제거 후')
+#     axes[1].set_ylabel('Amplitude')
+
+#     # 주파수 영역 비교
+#     freqs_orig, fft_orig = plt.mlab.psd(original, Fs=sr)
+#     freqs_clean, fft_clean = plt.mlab.psd(cleaned_2stage, Fs=sr)
+
+#     axes[2].semilogy(freqs_orig, fft_orig, label='원본', alpha=0.7)
+#     axes[2].semilogy(freqs_clean, fft_clean, label='2단계 처리 후', alpha=0.7)
+#     axes[2].axvline(x=2000, color='red', linestyle='--', label='2000Hz cutoff')
+#     axes[2].set_xlabel('Frequency (Hz)')
+#     axes[2].set_ylabel('Power Spectral Density')
+#     axes[2].set_title('주파수 스펙트럼 비교')
+#     axes[2].legend()
+#     axes[2].set_xlim(0, 5000)
+
+#     plt.tight_layout()
+#     plt.show()
+
+#     return original, cleaned_2stage
