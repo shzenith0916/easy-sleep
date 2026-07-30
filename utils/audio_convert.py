@@ -2,6 +2,13 @@ import os
 import librosa
 import numpy as np
 
+# 멜 계산은 clip_features 에 단일 소스로 둔다. import 컨텍스트(패키지/flat)가
+# 섞여 있어 상대 import 를 먼저 시도하고, 실패하면 flat 으로 폴백한다.
+try:
+    from .clip_features import clip_to_mel
+except ImportError:
+    from clip_features import clip_to_mel
+
 
 class Audio_Converter():
     def __init__(self, sr=None, n_fft=2048, hop_length=256, n_mels=128):
@@ -42,11 +49,14 @@ class Audio_Converter():
 
         returns:
         - mel_spec (numpy.ndarray): Mel spectrogram
+
+        주의: 멜 계산은 clip_features.clip_to_mel 로 단일화돼 있다. (과거에는
+        여기서 n_fft/hop_length/n_mels 를 받고도 librosa 에 넘기지 않아 hop=512
+        기본값으로 동작하는 버그가 있었음 → 이제 인자가 그대로 반영된다.)
+        모델 입력용 dB 멜이 필요하면 clip_features.clip_to_mel_db 를 쓸 것.
         """
 
-        mel_spec = librosa.feature.melspectrogram(y=audio, sr=sr)
-
-        return mel_spec
+        return clip_to_mel(audio, sr, n_fft=n_fft, hop_length=hop_length, n_mels=n_mels)
 
     @staticmethod
     def convert_to_dB_scale(mel_spec):

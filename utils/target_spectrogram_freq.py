@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import librosa
-from audio_convert import load_audio_and_create_spectrogram
+from audio_convert import Audio_Converter
 
 
 def analyze_spectrogram(S_DB):
@@ -89,7 +89,7 @@ def detect_snoring_events(target_band_db, threshold_db, sr=16000):
 if __name__ == "__main__":
     file_path = r"C:\Users\USER\Documents\코골이\easy_sleep\data\raw\output.wav"
 
-    audio, sr, S, S_DB = load_audio_and_create_spectrogram(file_path)
+    audio, sr, S, S_DB = Audio_Converter.load_audio_and_create_spectrogram(file_path)
 
     max_db, min_db, mean_db = analyze_spectrogram(S_DB)
 
