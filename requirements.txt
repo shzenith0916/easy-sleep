@@ -19,9 +19,3 @@ matplotlib>=3.9.0
 # Jupyter Notebook (optional)
 ipykernel>=6.29.0
 jupyter>=1.0.0
-
-# Experiment Tracking (optional)
-wandb>=0.15.0
-
-# Development Tools (optional)
-tqdm>=4.67.0
