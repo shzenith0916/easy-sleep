@@ -1,4 +1,9 @@
-import sys
+"""PSG 영상(.avi) → wav 추출.
+
+입력 경로는 인자로 받는다. 환자 식별정보가 파일명에 들어갈 수 있으므로
+경로를 소스에 하드코딩하지 말 것.
+"""
+import argparse
 from pathlib import Path
 import subprocess
 
@@ -14,5 +19,9 @@ def convert_avi_to_wav(input_file, output_file=None):
 
 
 if __name__ == "__main__":
-    convert_avi_to_wav(
-        'C:/Users/USER/Documents/코골이/easy_sleep/PSG_sample.avi')
+    ap = argparse.ArgumentParser(description="PSG 영상(.avi) → wav 추출")
+    ap.add_argument("input", help="입력 영상 경로")
+    ap.add_argument("-o", "--output", default=None,
+                    help="출력 wav 경로 (기본: 입력과 같은 이름의 .wav)")
+    args = ap.parse_args()
+    convert_avi_to_wav(args.input, args.output)

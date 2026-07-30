@@ -2,7 +2,7 @@
 
 `first_eda` / `second_eda` / `third_eda` 세 탐색 노트북과, 모델 입력 전처리(파이프라인 B) 프로토타입인 `feature_extract_test` 가 무엇을 했고, 무엇을 결론냈으며, 어떤 버그·주의점이 있었는지 한 곳에 정리한다.
 
-> **이 노트북들은 "데이터 탐색용 노트북"이다.** 일부 단순 버그·경로는 정리됐지만(아래 각 절의 "수정됨" 참고) 완전한 재실행이 목적은 아니다 — `first_eda`/`third_eda`는 여전히 옛 절대경로(`Documents\코골이\...`, 없는 파일 `PSG_sample...wav`)를 가리키고, `second_eda`는 경로를 `data/raw`로 고쳤지만 8시간대 파일용 파라미터(예: 노이즈 프로파일 140~150분 구간)가 짧은 샘플과 맞지 않는다. 그래서 결론과 **남아 있는** 주의점을 여기에 박제한다.
+> **이 노트북들은 "데이터 탐색용 노트북"이다.** 일부 단순 버그·경로는 정리됐지만(아래 각 절의 "수정됨" 참고) 완전한 재실행이 목적은 아니다 — `first_eda`/`third_eda`는 여전히 옛 절대경로(`Documents\코골이\...` 및 지금은 없는 PSG 파일)를 가리키고, `second_eda`는 경로를 `data/raw`로 고쳤지만 8시간대 파일용 파라미터(예: 노이즈 프로파일 140~150분 구간)가 짧은 샘플과 맞지 않는다. 그래서 결론과 **남아 있는** 주의점을 여기에 기록한다.
 >
 > 검출 로직은 이미 규칙기반 [../preprocessing/snore_extract.py](../preprocessing/snore_extract.py) 로 대체됐다. 전체 데이터 흐름은 [pipeline_overview.ipynb](pipeline_overview.ipynb) 참고.
 
