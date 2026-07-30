@@ -69,7 +69,7 @@ MIN_SEG_SEC = 5.0          # 이보다 짧은 에피소드는 버림(우연한 �
 PAD_SEC = 0.3              # 클립 앞뒤 여유
 
 # 호흡 주기성 검사
-PERIODICITY_MIN_EVENTS = 3 # 한 세그먼트 안에 최소 이만큼 반복 이벤트가 있어야 인정
+PERIODICITY_MIN_EVENTS = 3  # 한 세그먼트 안에 최소 이만큼 반복 이벤트가 있어야 인정
 PERIOD_RANGE_SEC = (1.5, 7.0)  # 정상 코골이 호흡 간격 범위
 
 
@@ -84,7 +84,8 @@ def frame_features(y, sr):
     hop_len = int(HOP_SEC * sr)
 
     # 전체 RMS 에너지 (프레임별)
-    rms = librosa.feature.rms(y=y, frame_length=frame_len, hop_length=hop_len)[0]
+    rms = librosa.feature.rms(
+        y=y, frame_length=frame_len, hop_length=hop_len)[0]
 
     # 저주파 대역만 통과시킨 신호의 RMS
     sos = bandpass_sos(SNORE_BAND[0], SNORE_BAND[1], sr)

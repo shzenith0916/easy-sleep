@@ -1,0 +1,30 @@
+[project]
+name = "easy-sleep"
+version = "0.1.0"
+description = "코골이 검출 선행 연구 — 규칙기반 구간 추출 및 멜스펙트로그램 전처리"
+requires-python = ">=3.11"
+
+# 실제 남아있는 코드의 import 를 스캔해 맞춘 목록이다.
+# tensorflow / keras / scikit-learn 은 학습 코드를 폐기하면서 함께 제거했다.
+# (재학습은 후속 프로젝트에서 진행 — notebooks/model_training_lessons.md 참고)
+dependencies = [
+    "librosa>=0.10.0",     # 오디오 로드 · 멜스펙트로그램 · ZCR
+    "soundfile>=0.12.0",   # wav 쓰기 (snore_extract 클립 저장)
+    "numpy>=1.24.0",
+    "scipy>=1.13.0",       # butter/filtfilt 밴드패스, median filter
+    "noisereduce>=3.0.0",  # stationary 디노이즈 (denoise.py)
+    "pillow>=10.0.0",      # logmel_to_image 의 결정론적 리사이즈
+    "matplotlib>=3.9.0",   # 진단 시각화 (modular_noise_analysis.py)
+]
+
+[project.optional-dependencies]
+# 노트북을 실행할 때만 필요: uv sync --extra notebooks
+notebooks = [
+    "ipykernel>=6.29.0",
+    "jupyter>=1.0.0",
+]
+
+[tool.uv]
+# 패키지가 아니라 스크립트 모음이다 (__init__.py 없음, flat import).
+# 이 설정이 없으면 uv sync 가 빌드를 시도하다 실패한다.
+package = false

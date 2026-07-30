@@ -77,7 +77,7 @@ def extract_audio_segment(audio_input, sr=22050, start_minutes=0, end_minutes=No
     return y_segment, sr, segment_info
 
 
-# 2. 본 오디오 통계 분석
+# 2. 기본 오디오 통계 분석
 def analyze_audio_stats(y_segment, sr):
     """
     오디오의 기본 통계 분석 (RMS, 최대 진폭, 다이나믹 레인지)
