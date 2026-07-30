@@ -144,7 +144,7 @@ python snore_extract.py night.wav --dry-run --csv check.csv
 
 ## 9. 관련 문서
 
-- **이전 탐색 정리**: [../notebooks/EDA_정리.md](../notebooks/EDA_정리.md) — `first/second/third_eda` 의 목적·결론·알려진 버그 정리. 이 스크립트의 적응형+주기성 방식은 EDA1의 단순 dB 임계값 검출이 단발 소음에 약했던 한계에서 발전한 것이다.
+- **이전 탐색 정리**: [../notebooks/EDA.md](../notebooks/EDA.md) — `first/second/third_eda` 의 목적·결론·알려진 버그 정리. 이 스크립트의 적응형+주기성 방식은 EDA1의 단순 dB 임계값 검출이 단발 소음에 약했던 한계에서 발전한 것이다.
 - **전체 데이터 흐름**: [../notebooks/pipeline_overview.ipynb](../notebooks/pipeline_overview.ipynb) — 이 스크립트(A: 라벨 생성)와 모델 입력 전처리(B: 멜 이미지→CNN)를 분리하고, 그 사이 단계(에피소드→`CLIP_SEC` 클립)를 시연한다.
 
 > 주의: 이 스크립트(A)는 학습데이터를 캐는 도구이고 **추론 때 돌지 않는다.** "학습 전처리 == 추론 전처리" 동일성 원칙은 B(멜 이미지 파이프라인)에만 적용된다. 위 8장 끝 문장처럼 A의 임계값을 추론 전처리와 동일시하면 안 된다.
